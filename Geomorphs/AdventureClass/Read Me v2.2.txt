@@ -1,0 +1,11 @@
+This archive presents the Adventure Class Geomorph tiles in PNG format with transparent floor backgrounds. This allows you to overlay the images on a square or hexagon grid or no grid at all (baseplates with pre-rendered grids are provided in the archive. Or you can toggle the grid, as I did in my sample maps. These tiles are scaled to 60 pixels per 1.5 meter / 5 foot square (which I sometimes refer to as 60 dpi). This conveniently works out to 1 pixel = 1 inch, making a 1 yard hex 36 pixels across. The High Resolution version of the files 5x larger (300 pixels per square, 180 pixels per hex).
+
+These files, as with Robert's original work, are released under Creative Commons Attribution Non-Commercial 4.0 International License. 
+https://creativecommons.org/licenses/by-nc/4.0/
+
+You can find a lot more information by visiting my webpage for these files:
+
+http://gurpsland.no-ip.org/geomorphs
+
+Eric B. Smith
+ericbsmith42@gmail.com
