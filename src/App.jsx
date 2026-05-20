@@ -134,8 +134,7 @@ function Header({ engine }) {
 function InnerApp() {
   const engineRef = useRef(null);
   const [selectedObjects, setSelectedObjects] = useState([]);
-  const { state, actions } = useMapStore();
-  const { setUser, setMap, setActiveTool, setZoom, toggleGrid, toggleSnap } = actions;
+  const { setUser, setMap, setActiveTool, setZoom, toggleGrid, toggleSnap, setSnap } = actions;
 
   // Firebase auth state subscription
   useEffect(() => {
@@ -254,7 +253,7 @@ function InnerApp() {
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [setActiveTool, setZoom, toggleGrid, toggleSnap]);
+  }, [setActiveTool, setZoom, toggleGrid, toggleSnap, setSnap]);
 
   const handleSelectionChange = useCallback((objects) => {
     setSelectedObjects(objects ?? []);
