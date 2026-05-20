@@ -214,14 +214,21 @@ function InnerApp() {
         return;
       }
 
-      // Ctrl Key shortcuts (Undo/Redo)
+      // Ctrl Key shortcuts (Undo/Redo, Copy/Paste)
       if (e.ctrlKey || e.metaKey) {
-        if (e.key.toUpperCase() === 'Z') {
+        const key = e.key.toUpperCase();
+        if (key === 'Z') {
           e.preventDefault();
           engineRef.current?.undo();
-        } else if (e.key.toUpperCase() === 'Y') {
+        } else if (key === 'Y') {
           e.preventDefault();
           engineRef.current?.redo();
+        } else if (key === 'C') {
+          e.preventDefault();
+          engineRef.current?.copySelected();
+        } else if (key === 'V') {
+          e.preventDefault();
+          engineRef.current?.pasteSelected();
         }
         return;
       }

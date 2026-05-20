@@ -611,6 +611,87 @@ export function useCanvasEngine({
     onObjectModified?.(obj);
   }, [onObjectModified]);
 
+  // ── Clipboard Reference ───────────────────────────────────────────────────────
+  const clipboardRef = useRef(null);
+
+  // ── Copy Selected ─────────────────────────────────────────────────────────────
+  const copySelected = useCallback(async () => {
+    const fc = fabricRef.current;
+    if (!fc) return;
+    const active = fc.getActiveObject();
+    if (!active || active._isGrid) return;
+    
+    try {
+      const cloned = await active.clone([
+        '_tileId',
+        '_tilePath',
+        '_snapToGrid',
+        '_allowOverlap',
+        '_isSymbol',
+        '_isTransparent',
+        '_rotation',
+        'selectable',
+        'hasControls'
+      ]);
+      clipboardRef.current = cloned;
+    } catch (err) {
+      console.error('Failed to copy selected object:', err);
+    }
+  }, []);
+
+  // ── Paste Selected ────────────────────────────────────────────────────────────
+  const pasteSelected = useCallback(async () => {
+    const fc = fabricRef.current;
+    if (!fc) return;
+    if (!clipboardRef.current) return;
+
+    try {
+      const cloned = await clipboardRef.current.clone([
+        '_tileId',
+        '_tilePath',
+        '_snapToGrid',
+        '_allowOverlap',
+        '_isSymbol',
+        '_isTransparent',
+        '_rotation',
+        'selectable',
+        'hasControls'
+      ]);
+      
+      fc.discardActiveObject();
+      
+      // Offset position slightly from original clipboard so user sees it pasted
+      cloned.set({
+        left: cloned.left + 30,
+        top: cloned.top + 30,
+        evented: true,
+      });
+
+      if (cloned.type === 'activeSelection') {
+        cloned.canvas = fc;
+        cloned.forEachObject((obj) => {
+          fc.add(obj);
+        });
+        cloned.setCoords();
+      } else {
+        fc.add(cloned);
+      }
+      
+      // Shift original clipboard anchor so consecutive pastes cascade down (premium design UX)
+      clipboardRef.current.set({
+        left: clipboardRef.current.left + 30,
+        top: clipboardRef.current.top + 30,
+      });
+
+      fc.setActiveObject(cloned);
+      fc.requestRenderAll();
+      
+      onObjectModified?.(cloned);
+    } catch (err) {
+      console.error('Failed to paste object:', err);
+    }
+  }, [onObjectModified]);
+
   // ── Delete selected ───────────────────────────────────────────────────────────
   const deleteSelected = useCallback(() => {
     const fc = fabricRef.current;
@@ -783,6 +864,8 @@ export function useCanvasEngine({
     placeTile,
     rotateSelected,
     nudgeSelected,
+    copySelected,
+    pasteSelected,
     deleteSelected,
     getSelectedProps,
     updateSelectedProp,
