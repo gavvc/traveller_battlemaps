@@ -134,6 +134,7 @@ function Header({ engine }) {
 function InnerApp() {
   const engineRef = useRef(null);
   const [selectedObjects, setSelectedObjects] = useState([]);
+  const { state, actions } = useMapStore();
   const { setUser, setMap, setActiveTool, setZoom, toggleGrid, toggleSnap, setSnap } = actions;
 
   // Firebase auth state subscription
