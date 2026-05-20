@@ -32,7 +32,12 @@ export function saveMapToStorage(mapData) {
     maps.push(mapToSave);
   }
   
-  localStorage.setItem(MAPS_KEY, JSON.stringify(maps));
+  try {
+    localStorage.setItem(MAPS_KEY, JSON.stringify(maps));
+  } catch (e) {
+    console.error('Failed to save map to localStorage:', e);
+    alert('Storage is full! Please delete some old maps or enable Cloud Sync to free up space.');
+  }
   return mapToSave;
 }
 
