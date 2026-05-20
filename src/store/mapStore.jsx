@@ -65,6 +65,9 @@ function reducer(state, action) {
     case 'TOGGLE_SNAP':
       return { ...state, snapToGrid: !state.snapToGrid };
 
+    case 'SET_SNAP':
+      return { ...state, snapToGrid: action.snap };
+
     case 'SET_ZOOM':
       return { ...state, zoom: action.zoom };
 
@@ -125,6 +128,7 @@ export function MapStoreProvider({ children }) {
     toggleGrid:           useCallback(() => dispatch({ type: 'TOGGLE_GRID' }), []),
     setActiveTool:        useCallback((tool) => dispatch({ type: 'SET_ACTIVE_TOOL', tool }), []),
     toggleSnap:           useCallback(() => dispatch({ type: 'TOGGLE_SNAP' }), []),
+    setSnap:              useCallback((snap) => dispatch({ type: 'SET_SNAP', snap }), []),
     setZoom:              useCallback((zoom) => dispatch({ type: 'SET_ZOOM', zoom }), []),
     setSelected:          useCallback((ids) => dispatch({ type: 'SET_SELECTED', ids }), []),
     setDirty:             useCallback((dirty) => dispatch({ type: 'SET_DIRTY', dirty }), []),
