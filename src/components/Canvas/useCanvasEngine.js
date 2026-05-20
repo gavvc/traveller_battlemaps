@@ -604,6 +604,7 @@ export function useCanvasEngine({
     obj.set({
       left: obj.left + dx,
       top: obj.top + dy,
+      _snapToGrid: false,
     });
     fc.requestRenderAll();
     onObjectModified?.(obj);
@@ -645,10 +646,13 @@ export function useCanvasEngine({
     const fc = fabricRef.current;
     if (!fc) return;
     const obj = fc.getActiveObject();
-    if (!obj) return;
-    if (key === 'x') obj.set({ left: Number(value) });
-    else if (key === 'y') obj.set({ top: Number(value) });
-    else if (key === 'rotation') obj.set({ angle: Number(value) });
+    if (key === 'x') {
+      obj.set({ left: Number(value) });
+      obj._snapToGrid = false;
+    } else if (key === 'y') {
+      obj.set({ top: Number(value) });
+      obj._snapToGrid = false;
+    } else if (key === 'rotation') obj.set({ angle: Number(value) });
     else if (key === 'snapToGrid') obj._snapToGrid = value;
     else if (key === 'allowOverlap') obj._allowOverlap = value;
     else if (key === 'isTransparent') {
