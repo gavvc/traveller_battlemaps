@@ -9,7 +9,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const GEOMORPHS_ROOT = path.join(__dirname, '..', 'Geomorphs');
+const GEOMORPHS_ROOT = path.join(__dirname, '..', 'public', 'Geomorphs');
 const OUTPUT_FILE = path.join(__dirname, '..', 'public', 'tile-manifest.json');
 
 // Collections to skip (PSD-only, no usable PNG tiles)

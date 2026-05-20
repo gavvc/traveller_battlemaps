@@ -12,7 +12,7 @@ import sharp from 'sharp';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const MANIFEST_FILE = path.join(__dirname, '..', 'public', 'tile-manifest.json');
-const GEOMORPHS_ROOT = path.join(__dirname, '..');  // tiles are at root/Geomorphs/...
+const GEOMORPHS_ROOT = path.join(__dirname, '..', 'public');  // tiles are at public/Geomorphs/...
 const THUMBNAILS_DIR = path.join(__dirname, '..', 'public', 'thumbnails');
 const THUMBNAIL_MAX_WIDTH = 150;
 const THUMBNAIL_MAX_HEIGHT = 150;
