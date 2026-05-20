@@ -21,6 +21,8 @@ import {
   getDocs
 } from 'firebase/firestore';
 
+import { getAnalytics, logEvent } from 'firebase/analytics';
+
 const firebaseConfig = {
   apiKey: "AIzaSyAPlPo6bMwAsy8CrBNVVtINIMOhQyjHf1I",
   authDomain: "geomorphs-ed6a8.firebaseapp.com",
@@ -35,6 +37,29 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+
+// Safe Analytics Initialization for SPA environments
+let analytics = null;
+if (typeof window !== 'undefined') {
+  try {
+    analytics = getAnalytics(app);
+  } catch (err) {
+    console.warn('Google Analytics failed to initialize:', err);
+  }
+}
+
+/**
+ * Custom telemetry helper to log user actions to GA4 dashboard.
+ */
+export function logAnalyticsEvent(eventName, params = {}) {
+  if (analytics) {
+    try {
+      logEvent(analytics, eventName, params);
+    } catch (err) {
+      console.error('Telemetry logging failed:', err);
+    }
+  }
+}
 
 // ── Authentication API ────────────────────────────────────────────────────────
 export function registerUser(email, password) {

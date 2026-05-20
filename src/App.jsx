@@ -13,7 +13,7 @@ import LoadMapDialog from './components/Dialogs/LoadMapDialog';
 import CloudSyncDialog from './components/Dialogs/CloudSyncDialog';
 import AboutDialog from './components/Dialogs/AboutDialog';
 import { saveMapToStorage } from './utils/storage';
-import { syncMapToCloud, logoutUser, subscribeToAuth } from './utils/firebase';
+import { syncMapToCloud, logoutUser, subscribeToAuth, logAnalyticsEvent } from './utils/firebase';
 
 // ── Header ────────────────────────────────────────────────────────────────────
 function Header({ engine }) {
@@ -28,6 +28,13 @@ function Header({ engine }) {
     };
     const saved = saveMapToStorage(mapToSave);
     actions.setMap(saved);
+
+    logAnalyticsEvent('save_map', {
+      map_name: saved.name,
+      grid_type: saved.gridType,
+      objects_count: saved.objects?.length || 0,
+      is_cloud: !!state.user
+    });
 
     // Save to Firebase Firestore if logged in
     if (state.user) {
@@ -52,6 +59,12 @@ function Header({ engine }) {
     };
     const saved = saveMapToStorage(duplicatedMap);
     actions.setMap(saved);
+
+    logAnalyticsEvent('duplicate_map', {
+      map_name: saved.name,
+      grid_type: saved.gridType,
+      objects_count: saved.objects?.length || 0
+    });
 
     // Sync clone to cloud if user logged in
     if (state.user) {
@@ -123,7 +136,7 @@ function Header({ engine }) {
           ＋ New
         </button>
         <div className="toolbar-divider" style={{ height: 20 }} />
-        <button className="btn btn-ghost" onClick={actions.showAboutDialog} title="About, Licensing & Credits">
+        <button className="btn btn-ghost" onClick={() => { actions.showAboutDialog(); logAnalyticsEvent('view_about'); }} title="About, Licensing & Credits">
           ❔ About
         </button>
         <div className="toolbar-divider" style={{ height: 20 }} />

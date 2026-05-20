@@ -4,7 +4,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useMapStore } from '../../store/mapStore';
 import { getSavedMaps, deleteMapFromStorage } from '../../utils/storage';
-import { fetchCloudMaps, deleteCloudMap } from '../../utils/firebase';
+import { fetchCloudMaps, deleteCloudMap, logAnalyticsEvent } from '../../utils/firebase';
 
 export default function LoadMapDialog() {
   const { state, actions } = useMapStore();
@@ -68,6 +68,11 @@ export default function LoadMapDialog() {
   if (!state.showLoadDialog) return null;
 
   function handleLoad(map) {
+    logAnalyticsEvent('load_map', {
+      map_name: map.name,
+      grid_type: map.gridType,
+      is_cloud: !!map.isCloudSynced
+    });
     actions.setMap(map);
     actions.hideLoadDialog();
   }
