@@ -192,9 +192,6 @@ function InnerApp() {
         else if (e.key === 'ArrowLeft') dx = -amt;
         else if (e.key === 'ArrowRight') dx = amt;
         
-        // Overtly turn off snap indicator in the UI
-        setSnap(false);
-        
         engineRef.current?.nudgeSelected(dx, dy);
         return;
       }

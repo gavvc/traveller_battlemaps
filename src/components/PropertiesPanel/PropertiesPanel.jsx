@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useMapStore } from '../../store/mapStore';
 
 export default function PropertiesPanel({ selectedObjects, engine }) {
   const [props, setProps] = useState(null);
-  const { actions } = useMapStore();
-  const { setSnap } = actions;
 
   useEffect(() => {
     if (!engine?.current || !selectedObjects?.length) {
@@ -15,9 +12,6 @@ export default function PropertiesPanel({ selectedObjects, engine }) {
   }, [selectedObjects, engine]);
 
   function handleChange(key, value) {
-    if (['x', 'y'].includes(key)) {
-      setSnap(false);
-    }
     engine.current?.updateSelectedProp(key, value);
     setProps(prev => prev ? { ...prev, [key]: value } : prev);
   }
