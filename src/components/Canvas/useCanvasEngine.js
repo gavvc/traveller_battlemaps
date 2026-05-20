@@ -595,6 +595,20 @@ export function useCanvasEngine({
     onObjectModified?.(obj);
   }, [onObjectModified]);
 
+  // ── Nudge selected object ──────────────────────────────────────────────────────
+  const nudgeSelected = useCallback((dx, dy) => {
+    const fc = fabricRef.current;
+    if (!fc) return;
+    const obj = fc.getActiveObject();
+    if (!obj) return;
+    obj.set({
+      left: obj.left + dx,
+      top: obj.top + dy,
+    });
+    fc.requestRenderAll();
+    onObjectModified?.(obj);
+  }, [onObjectModified]);
+
   // ── Delete selected ───────────────────────────────────────────────────────────
   const deleteSelected = useCallback(() => {
     const fc = fabricRef.current;
@@ -761,6 +775,7 @@ export function useCanvasEngine({
     fabricRef,
     placeTile,
     rotateSelected,
+    nudgeSelected,
     deleteSelected,
     getSelectedProps,
     updateSelectedProp,

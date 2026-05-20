@@ -182,6 +182,19 @@ function InnerApp() {
       // Ignore when typing in an input/textarea
       if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
       
+      // Object nudging via Arrow Keys (10px default, 60px with Shift)
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        e.preventDefault();
+        const amt = e.shiftKey ? 60 : 10;
+        let dx = 0, dy = 0;
+        if (e.key === 'ArrowUp') dy = -amt;
+        else if (e.key === 'ArrowDown') dy = amt;
+        else if (e.key === 'ArrowLeft') dx = -amt;
+        else if (e.key === 'ArrowRight') dx = amt;
+        engineRef.current?.nudgeSelected(dx, dy);
+        return;
+      }
+
       // Ctrl Key shortcuts (Undo/Redo)
       if (e.ctrlKey || e.metaKey) {
         if (e.key.toUpperCase() === 'Z') {
