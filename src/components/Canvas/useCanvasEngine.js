@@ -606,6 +606,7 @@ export function useCanvasEngine({
       top: obj.top + dy,
       _snapToGrid: false,
     });
+    obj.setCoords();
     fc.requestRenderAll();
     onObjectModified?.(obj);
   }, [onObjectModified]);
@@ -649,9 +650,11 @@ export function useCanvasEngine({
     if (key === 'x') {
       obj.set({ left: Number(value) });
       obj._snapToGrid = false;
+      obj.setCoords();
     } else if (key === 'y') {
       obj.set({ top: Number(value) });
       obj._snapToGrid = false;
+      obj.setCoords();
     } else if (key === 'rotation') obj.set({ angle: Number(value) });
     else if (key === 'snapToGrid') obj._snapToGrid = value;
     else if (key === 'allowOverlap') obj._allowOverlap = value;
