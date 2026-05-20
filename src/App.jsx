@@ -11,6 +11,7 @@ import PropertiesPanel from './components/PropertiesPanel/PropertiesPanel';
 import NewMapDialog from './components/Dialogs/NewMapDialog';
 import LoadMapDialog from './components/Dialogs/LoadMapDialog';
 import CloudSyncDialog from './components/Dialogs/CloudSyncDialog';
+import AboutDialog from './components/Dialogs/AboutDialog';
 import { saveMapToStorage } from './utils/storage';
 import { syncMapToCloud, logoutUser, subscribeToAuth } from './utils/firebase';
 
@@ -120,6 +121,10 @@ function Header({ engine }) {
         <div className="toolbar-divider" style={{ height: 20 }} />
         <button className="btn" onClick={actions.showNewMapDialog} title="Create a new map">
           ＋ New
+        </button>
+        <div className="toolbar-divider" style={{ height: 20 }} />
+        <button className="btn btn-ghost" onClick={actions.showAboutDialog} title="About, Licensing & Credits">
+          ❔ About
         </button>
         <div className="toolbar-divider" style={{ height: 20 }} />
         <span style={{ fontSize: 11, color: 'var(--color-text-muted)', padding: '0 4px' }}>
@@ -316,6 +321,7 @@ function InnerApp() {
       <NewMapDialog />
       <LoadMapDialog />
       <CloudSyncDialog />
+      <AboutDialog />
     </div>
   );
 }

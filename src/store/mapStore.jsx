@@ -35,6 +35,7 @@ const initialState = {
   showNewMapDialog: false,
   showLoadDialog: false,
   showCloudSyncDialog: false,
+  showAboutDialog: false,
   isDirty: false,
   user: null,           // Logged in Firebase user { uid, email }
 };
@@ -95,6 +96,12 @@ function reducer(state, action) {
     case 'HIDE_CLOUD_SYNC_DIALOG':
       return { ...state, showCloudSyncDialog: false };
 
+    case 'SHOW_ABOUT_DIALOG':
+      return { ...state, showAboutDialog: true };
+
+    case 'HIDE_ABOUT_DIALOG':
+      return { ...state, showAboutDialog: false };
+
     case 'SET_USER':
       return { ...state, user: action.user };
 
@@ -138,6 +145,8 @@ export function MapStoreProvider({ children }) {
     hideLoadDialog:       useCallback(() => dispatch({ type: 'HIDE_LOAD_DIALOG' }), []),
     showCloudSyncDialog:  useCallback(() => dispatch({ type: 'SHOW_CLOUD_SYNC_DIALOG' }), []),
     hideCloudSyncDialog:  useCallback(() => dispatch({ type: 'HIDE_CLOUD_SYNC_DIALOG' }), []),
+    showAboutDialog:      useCallback(() => dispatch({ type: 'SHOW_ABOUT_DIALOG' }), []),
+    hideAboutDialog:      useCallback(() => dispatch({ type: 'HIDE_ABOUT_DIALOG' }), []),
     setUser:              useCallback((user) => dispatch({ type: 'SET_USER', user }), []),
     newMap:               useCallback((options) => dispatch({ type: 'NEW_MAP', options }), []),
   };
