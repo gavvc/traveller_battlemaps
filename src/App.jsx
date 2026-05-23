@@ -192,7 +192,7 @@ function Header({ engine }) {
         <button className="btn" onClick={handleLoadClick} title="Load a saved map">
           📁 Load
         </button>
-        <button className="btn btn-primary" onClick={handleSave} title="Save map to localStorage">
+        <button className="btn" onClick={handleSave} title="Save map to localStorage">
           💾 Save
         </button>
         <button className="btn" onClick={handleDuplicate} title="Duplicate current map (copy)">

@@ -2,7 +2,7 @@ import { useMapStore } from '../../store/mapStore';
 import { logAnalyticsEvent } from '../../utils/firebase';
 
 const TOOLS = [
-  { id: 'select', icon: '⬛', label: 'Select', key: 'V' },
+  { id: 'select', icon: '⬉', label: 'Select', key: 'V' },
   { id: 'pan',    icon: '✋', label: 'Pan',    key: 'H' },
   { id: 'text',   icon: '𝐓',  label: 'Text',   key: 'T' },
 ];
