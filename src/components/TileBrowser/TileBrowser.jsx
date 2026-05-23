@@ -12,6 +12,18 @@ import {
 } from '../../hooks/useTileManifest';
 import TilePreviewPopover from './TilePreviewPopover';
 
+const COLLECTION_LABELS = {
+  'Geomorphs': 'General',
+  'CustomTiles': 'Custom',
+  'AdventureClass': 'Adventure'
+};
+
+const COLLECTION_ORDER = {
+  'Geomorphs': 1,
+  'CustomTiles': 2,
+  'AdventureClass': 3
+};
+
 // ── Tile Card ─────────────────────────────────────────────────────────────────
 function TileCard({ tile, onDragStart, onHover }) {
   const [imgError, setImgError] = useState(false);
@@ -82,7 +94,7 @@ function CollectionGroup({ collection, categories, onDragStart, onHover }) {
     <div className="tile-collection-group">
       <div className="tile-collection-header" onClick={() => setOpen(o => !o)}>
         <span className={`tile-collection-chevron ${open ? 'open' : ''}`}>▶</span>
-        {collection}
+        {COLLECTION_LABELS[collection] || collection}
         <span className="tile-collection-count">{totalTiles}</span>
       </div>
       {open && Object.entries(categories).map(([cat, tiles]) => (
@@ -210,7 +222,7 @@ export default function TileBrowser({ onTileDragStart }) {
         <FilterSection title="Collection" defaultOpen>
           <div className="filter-row">
             {collections.map(col => {
-              const label = col.replace('AdventureClass','Advent.').replace('CustomTiles','Custom').replace('Geomorphs','Core');
+              const label = COLLECTION_LABELS[col] || col;
               return (
                 <button key={col} className={`filter-pill ${filters.collection === col ? 'active' : ''}`}
                   onClick={() => setFilter('collection', col)} title={col}>{label}</button>
@@ -271,9 +283,15 @@ export default function TileBrowser({ onTileDragStart }) {
         {isSearching ? (
           <FlatGrid tiles={filtered} onDragStart={onTileDragStart} onHover={handleHover} />
         ) : (
-          tree && Object.entries(tree).map(([col, cats]) => (
-            <CollectionGroup key={col} collection={col} categories={cats} onDragStart={onTileDragStart} onHover={handleHover} />
-          ))
+          tree && Object.entries(tree)
+            .sort(([colA], [colB]) => {
+              const orderA = COLLECTION_ORDER[colA] ?? 99;
+              const orderB = COLLECTION_ORDER[colB] ?? 99;
+              return orderA - orderB;
+            })
+            .map(([col, cats]) => (
+              <CollectionGroup key={col} collection={col} categories={cats} onDragStart={onTileDragStart} onHover={handleHover} />
+            ))
         )}
       </div>
 

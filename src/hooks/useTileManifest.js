@@ -108,10 +108,19 @@ export function filterTiles(tiles, { searchText = '', filters = {} }) {
  * Get unique collections for filter UI.
  */
 export function useCollectionList(manifest) {
+  const COLLECTION_ORDER = {
+    'Geomorphs': 1,
+    'CustomTiles': 2,
+    'AdventureClass': 3
+  };
   return useMemo(() => {
     if (!manifest) return [];
     const cols = [...new Set(manifest.tiles.map(t => t.collection))];
-    return cols.sort();
+    return cols.sort((a, b) => {
+      const orderA = COLLECTION_ORDER[a] ?? 99;
+      const orderB = COLLECTION_ORDER[b] ?? 99;
+      return orderA - orderB;
+    });
   }, [manifest]);
 }
 
