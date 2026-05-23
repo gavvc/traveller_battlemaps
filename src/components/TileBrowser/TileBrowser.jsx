@@ -6,7 +6,6 @@ import {
   useTileManifest,
   filterTiles,
   buildTileTree,
-  useCollectionList,
   useRoomList,
   useDtonBands,
 } from '../../hooks/useTileManifest';
@@ -146,7 +145,6 @@ function FilterSection({ title, children, defaultOpen = false }) {
 // ── Main TileBrowser ──────────────────────────────────────────────────────────
 export default function TileBrowser({ onTileDragStart }) {
   const { manifest, loading, error } = useTileManifest();
-  const collections = useCollectionList(manifest);
   const rooms       = useRoomList(manifest);
   const dtonBands   = useDtonBands(manifest);
 
@@ -218,18 +216,6 @@ export default function TileBrowser({ onTileDragStart }) {
 
       {/* Collapsible filter panels */}
       <div style={{ borderBottom: '1px solid var(--color-border)', overflowY: 'auto', maxHeight: 280, flexShrink: 0 }}>
-
-        <FilterSection title="Collection" defaultOpen>
-          <div className="filter-row">
-            {collections.map(col => {
-              const label = COLLECTION_LABELS[col] || col;
-              return (
-                <button key={col} className={`filter-pill ${filters.collection === col ? 'active' : ''}`}
-                  onClick={() => setFilter('collection', col)} title={col}>{label}</button>
-              );
-            })}
-          </div>
-        </FilterSection>
 
         <FilterSection title="Grid Size">
           <div className="filter-row">
