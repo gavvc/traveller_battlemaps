@@ -819,8 +819,8 @@ export function useCanvasEngine({
     fc.backgroundColor = map.backgroundColor || '#ffffff';
     fc.requestRenderAll();
 
-    // Export at standard resolution (multiplier: 1)
-    const dataURL = fc.toDataURL({ format: 'png', multiplier: 1 });
+    // Export at high resolution (multiplier: 3 for ultra-crisp output)
+    const dataURL = fc.toDataURL({ format: 'png', multiplier: 3 });
 
     // Restore settings
     if (!withGrid && fc._gridMapRef) {
