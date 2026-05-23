@@ -18,18 +18,27 @@ export default function TilePreviewPopover({ tile, anchorEl }) {
       return;
     }
 
-    const rect = anchorEl.getBoundingClientRect();
-    const winH = window.innerHeight;
+    const measureAndPosition = () => {
+      const popoverEl = popoverRef.current;
+      if (!popoverEl) return;
 
-    // Position: to the right of the sidebar, vertically centred on the anchor
-    const left = rect.right + OFFSET_X;
-    let top = rect.top + rect.height / 2;
+      const rect = anchorEl.getBoundingClientRect();
+      const winH = window.innerHeight;
+      const popH = popoverEl.offsetHeight || 320; // Dynamic measurement
 
-    // Keep within viewport vertically
-    const popH = 320; // estimated popover height for viewport clamping
-    top = Math.max(8, Math.min(top - popH / 2, winH - popH - 8));
+      // Position: to the right of the sidebar, vertically centered on the anchor
+      const left = rect.right + OFFSET_X;
+      let top = rect.top + rect.height / 2 - popH / 2;
 
-    setStyle({ left, top, opacity: 1, pointerEvents: 'none' });
+      // Keep within viewport vertically (no lower than bottom of window, no higher than 8px from top)
+      top = Math.max(8, Math.min(top, winH - popH - 8));
+
+      setStyle({ left, top, opacity: 1, pointerEvents: 'none' });
+    };
+
+    // Run measurement on next frame to ensure browser has layout updated
+    const frameId = requestAnimationFrame(measureAndPosition);
+    return () => cancelAnimationFrame(frameId);
   }, [tile, anchorEl]);
 
   if (!tile) return null;
@@ -45,7 +54,7 @@ export default function TilePreviewPopover({ tile, anchorEl }) {
         background: 'var(--color-bg-panel)',
         border: '1px solid var(--color-border-focus)',
         borderRadius: 'var(--radius-lg)',
-        boxShadow: 'var(--shadow-lg), 0 0 0 1px rgba(59,130,246,0.15)',
+        boxShadow: 'var(--shadow-lg), 0 0 0 1px rgba(255,0,127,0.15)',
         overflow: 'hidden',
         transition: 'opacity 120ms ease',
       }}
@@ -100,13 +109,13 @@ export default function TilePreviewPopover({ tile, anchorEl }) {
             </span>
           )}
           {tile.orientation && (
-            <span style={{ fontSize: 10, padding: '1px 6px', borderRadius: 3, background: 'rgba(139,92,246,0.15)', color: '#a78bfa' }}>
+            <span style={{ fontSize: 10, padding: '1px 6px', borderRadius: 3, background: 'rgba(255,0,127,0.12)', color: 'var(--color-text-accent)' }}>
               {tile.orientation}
             </span>
           )}
           {tile.isOverlay && <span style={{ fontSize: 10, padding: '1px 6px', borderRadius: 3, background: 'rgba(234,88,12,0.2)', color: '#fb923c' }}>Overlay</span>}
           {tile.isMirror  && <span style={{ fontSize: 10, padding: '1px 6px', borderRadius: 3, background: 'rgba(15,118,110,0.2)', color: '#2dd4bf' }}>Mirror</span>}
-          {tile.isSymbol  && <span style={{ fontSize: 10, padding: '1px 6px', borderRadius: 3, background: 'rgba(99,102,241,0.2)', color: '#818cf8' }}>Symbol</span>}
+          {tile.isSymbol  && <span style={{ fontSize: 10, padding: '1px 6px', borderRadius: 3, background: 'rgba(255,255,255,0.06)', color: 'var(--color-text-secondary)' }}>Symbol</span>}
         </div>
 
         {/* Room tags */}
