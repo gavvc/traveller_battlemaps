@@ -174,7 +174,7 @@ function Header({ engine }) {
         {/* Optional Cloud Sync Button/Indicator */}
         {state.user ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginRight: 8 }}>
-            <span style={{ fontSize: 11, color: 'var(--color-text-muted)', background: 'rgba(56, 189, 248, 0.08)', padding: '4px 10px', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(56, 189, 248, 0.15)' }}>
+            <span style={{ fontSize: 11, color: 'var(--color-text-secondary)', background: 'rgba(255, 0, 127, 0.06)', padding: '4px 10px', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(255, 0, 127, 0.15)' }}>
               ☁️ Cloud Synced: <strong style={{ color: 'var(--color-text-primary)' }}>{state.user.email}</strong>
             </span>
             <button className="btn btn-ghost" onClick={() => logoutUser()} style={{ fontSize: 10, padding: '5px 8px' }}>

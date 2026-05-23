@@ -10,41 +10,41 @@ html, body, #root { height: 100%; overflow: hidden; }
 /* --- Design Tokens --- */
 :root {
   /* Colors */
-  --color-bg-deep:      #0a0d14;
-  --color-bg-panel:     #10151f;
-  --color-bg-surface:   #161d2b;
-  --color-bg-elevated:  #1c2438;
-  --color-bg-hover:     #212d42;
-  --color-bg-active:    #26354e;
+  --color-bg-deep:      #121212;
+  --color-bg-panel:     #1c1c1c;
+  --color-bg-surface:   #262626;
+  --color-bg-elevated:  #2d2d2d;
+  --color-bg-hover:     #383838;
+  --color-bg-active:    #444444;
 
-  --color-border:       #2a3650;
-  --color-border-focus: #4a90d9;
-  --color-border-light: #1e2d45;
+  --color-border:       #333333;
+  --color-border-focus: #ff007f;
+  --color-border-light: #282828;
 
-  --color-text-primary:   #e8edf5;
-  --color-text-secondary: #8a9bbf;
-  --color-text-muted:     #4d5f7a;
-  --color-text-accent:    #60a5fa;
+  --color-text-primary:   #f5f5f5;
+  --color-text-secondary: #cccccc;
+  --color-text-muted:     #888888;
+  --color-text-accent:    #ff007f;
 
-  --color-accent-primary: #3b82f6;
-  --color-accent-hover:   #60a5fa;
-  --color-accent-glow:    rgba(59, 130, 246, 0.25);
+  --color-accent-primary: #ff007f;
+  --color-accent-hover:   #ff3399;
+  --color-accent-glow:    rgba(255, 0, 127, 0.25);
 
   --color-amber:        #f59e0b;
   --color-amber-glow:   rgba(245, 158, 11, 0.2);
   --color-green:        #10b981;
   --color-red:          #ef4444;
-  --color-purple:       #8b5cf6;
+  --color-purple:       #ff007f;
 
-  --color-overlay-badge: #8b5cf6;
+  --color-overlay-badge: #ff007f;
   --color-symbol-badge:  #f59e0b;
   --color-mirror-badge:  #06b6d4;
 
   /* Gradients */
-  --gradient-header: linear-gradient(135deg, #0f1929 0%, #131e30 50%, #0d1622 100%);
-  --gradient-panel:  linear-gradient(180deg, #10151f 0%, #0d121a 100%);
-  --gradient-accent: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  --gradient-tile-hover: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(139,92,246,0.08));
+  --gradient-header: linear-gradient(135deg, #1c1c1c 0%, #2a2a2a 50%, #141414 100%);
+  --gradient-panel:  linear-gradient(180deg, #1c1c1c 0%, #121212 100%);
+  --gradient-accent: linear-gradient(135deg, #ff007f, #b30059);
+  --gradient-tile-hover: linear-gradient(135deg, rgba(255,0,127,0.12), rgba(179,0,89,0.08));
 
   /* Typography */
   --font-ui:      'Inter', system-ui, sans-serif;

@@ -139,11 +139,11 @@ export default function LoadMapDialog() {
                       {m.isCloudSynced ? (
                         <span style={{
                           fontSize: 9,
-                          background: 'rgba(56, 189, 248, 0.15)',
-                          color: '#38bdf8',
+                          background: 'rgba(255, 0, 127, 0.15)',
+                          color: 'var(--color-text-accent)',
                           padding: '1px 5px',
                           borderRadius: 'var(--radius-sm)',
-                          border: '1px solid rgba(56, 189, 248, 0.2)'
+                          border: '1px solid rgba(255, 0, 127, 0.2)'
                         }}>
                           ☁️ Synced
                         </span>
@@ -161,7 +161,7 @@ export default function LoadMapDialog() {
                       )}
                     </div>
                     <div style={{ fontSize: 10, color: 'var(--color-text-muted)' }}>
-                      {m.gridType === 'hex' ? '⬡ Hex Grid' : '⬜ Square Grid'} · Updated {new Date(m.updatedAt || Date.now()).toLocaleString()}
+                      Square Grid · Updated {new Date(m.updatedAt || Date.now()).toLocaleString()}
                     </div>
                   </div>
                   <button
