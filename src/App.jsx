@@ -12,12 +12,14 @@ import NewMapDialog from './components/Dialogs/NewMapDialog';
 import LoadMapDialog from './components/Dialogs/LoadMapDialog';
 import CloudSyncDialog from './components/Dialogs/CloudSyncDialog';
 import AboutDialog from './components/Dialogs/AboutDialog';
+import ExportDialog from './components/Dialogs/ExportDialog';
 import { saveMapToStorage } from './utils/storage';
 import { syncMapToCloud, logoutUser, subscribeToAuth, logAnalyticsEvent } from './utils/firebase';
 
 // ── Header ────────────────────────────────────────────────────────────────────
 function Header({ engine }) {
   const { state, actions } = useMapStore();
+  const fileInputRef = useRef(null);
 
   async function handleSave() {
     if (!engine?.current) return;
@@ -78,6 +80,71 @@ function Header({ engine }) {
     alert(`Map "${state.map.name}" duplicated successfully as "${duplicatedMap.name}"!`);
   }
 
+  function handleLoadClick() {
+    if (state.isDirty) {
+      if (!confirm('You have unsaved changes. Loading another map will discard them. Do you want to proceed?')) {
+        return;
+      }
+    }
+    actions.showLoadDialog();
+  }
+
+  function handleNewClick() {
+    if (state.isDirty) {
+      if (!confirm('You have unsaved changes. Creating a new map will discard them. Do you want to proceed?')) {
+        return;
+      }
+    }
+    actions.showNewMapDialog();
+  }
+
+  function handleImportClick() {
+    if (state.isDirty) {
+      if (!confirm('You have unsaved changes. Importing a map will discard them. Do you want to proceed?')) {
+        return;
+      }
+    }
+    fileInputRef.current?.click();
+  }
+
+  function handleFileImport(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const importedData = JSON.parse(event.target.result);
+        if (!importedData.objects || !Array.isArray(importedData.objects)) {
+          alert('Error: The selected file is not a valid GeomorphForge map.');
+          return;
+        }
+
+        const mapToLoad = {
+          ...importedData,
+          id: `map_${Date.now()}`,
+          name: importedData.name || 'Imported Map',
+          gridType: 'square', // Hardcode to square
+        };
+
+        actions.setMap(mapToLoad);
+        actions.setDirty(true);
+        
+        logAnalyticsEvent('import_map', {
+          map_name: mapToLoad.name,
+          objects_count: mapToLoad.objects?.length || 0
+        });
+
+        alert(`Map "${mapToLoad.name}" imported successfully!`);
+      } catch (err) {
+        console.error('Import failed:', err);
+        alert('Failed to parse JSON file.');
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  }
+
   return (
     <header className="app-header">
       {/* Logo */}
@@ -122,7 +189,7 @@ function Header({ engine }) {
 
         <div className="toolbar-divider" style={{ height: 20, marginRight: 8 }} />
 
-        <button className="btn" onClick={actions.showLoadDialog} title="Load a saved map">
+        <button className="btn" onClick={handleLoadClick} title="Load a saved map">
           📁 Load
         </button>
         <button className="btn btn-primary" onClick={handleSave} title="Save map to localStorage">
@@ -131,18 +198,28 @@ function Header({ engine }) {
         <button className="btn" onClick={handleDuplicate} title="Duplicate current map (copy)">
           📋 Duplicate
         </button>
+        
         <div className="toolbar-divider" style={{ height: 20 }} />
-        <button className="btn" onClick={actions.showNewMapDialog} title="Create a new map">
+
+        <button className="btn" onClick={handleImportClick} title="Import map JSON file">
+          📥 Import
+        </button>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileImport}
+          accept=".json"
+          style={{ display: 'none' }}
+        />
+        <button className="btn" onClick={actions.showExportDialog} title="Export map options">
+          📤 Export
+        </button>
+
+        <div className="toolbar-divider" style={{ height: 20 }} />
+
+        <button className="btn" onClick={handleNewClick} title="Create a new map">
           ＋ New
         </button>
-        <div className="toolbar-divider" style={{ height: 20 }} />
-        <button className="btn btn-ghost" onClick={() => { actions.showAboutDialog(); logAnalyticsEvent('view_about'); }} title="About, Licensing & Credits">
-          ❔ About
-        </button>
-        <div className="toolbar-divider" style={{ height: 20 }} />
-        <span style={{ fontSize: 11, color: 'var(--color-text-muted)', padding: '0 4px' }}>
-          {state.map.gridType === 'hex' ? '⬡ Hex' : '⬜ Square'} grid
-        </span>
       </div>
     </header>
   );
@@ -342,6 +419,7 @@ function InnerApp() {
       <LoadMapDialog />
       <CloudSyncDialog />
       <AboutDialog />
+      <ExportDialog engine={engineRef} />
     </div>
   );
 }

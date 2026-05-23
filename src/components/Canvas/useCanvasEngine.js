@@ -555,19 +555,19 @@ export function useCanvasEngine({
     return img;
   }, [snapToGridEnabled, map]);
 
-  // ── Snap on object move ───────────────────────────────────────────────────────
+  // ── Snap and overlap check on object move ────────────────────────────────────
   useEffect(() => {
     const fc = fabricRef.current;
     if (!fc) return;
 
     const handleMoving = (e) => {
       const obj = e.target;
-      if (!obj._snapToGrid || !snapToGridEnabled || e.e?.altKey) return;
-      // obj.left/top = centre of object (originX/Y = 'center')
-      if (map.gridType === 'hex') {
-        const snapped = snapToHex(obj.left, obj.top, map.gridSize / 2);
-        obj.set({ left: snapped.x, top: snapped.y });
-      } else {
+      
+      // Save pre-movement coordinates in case we need to revert
+      const prevLeft = obj.left;
+      const prevTop = obj.top;
+      
+      if (obj._snapToGrid && snapToGridEnabled && !e.e?.altKey) {
         // Snap the implied top-left, then re-derive centre
         const w = obj.width * obj.scaleX;
         const h = obj.height * obj.scaleY;
@@ -576,11 +576,45 @@ export function useCanvasEngine({
         const tl_y = snapToGrid(obj.top  - h / 2, unit);
         obj.set({ left: tl_x + w / 2, top: tl_y + h / 2 });
       }
+      
+      obj.setCoords(); // Recalculate coordinates for overlap checks
+      
+      // Overlap restriction: if the tile does not allow overlapping, check for collisions
+      if (!obj._allowOverlap) {
+        const others = fc.getObjects().filter(o => !o._isGrid && o !== obj);
+        let collides = false;
+        for (const other of others) {
+          if (!other._allowOverlap && checkOverlap(obj, other)) {
+            collides = true;
+            break;
+          }
+        }
+        if (collides) {
+          // Revert to the last valid position, or keep the previous position
+          const lastValid = obj._lastValidPosition || { left: prevLeft, top: prevTop };
+          obj.set({ left: lastValid.left, top: lastValid.top });
+          obj.setCoords();
+        } else {
+          // Update the last known valid position
+          obj._lastValidPosition = { left: obj.left, top: obj.top };
+        }
+      }
+    };
+
+    // Clean up lastValidPosition when interaction completes
+    const handleModified = (e) => {
+      if (e.target) {
+        e.target._lastValidPosition = null;
+      }
     };
 
     fc.on('object:moving', handleMoving);
-    return () => fc.off('object:moving', handleMoving);
-  }, [snapToGridEnabled, map.gridType, map.gridSize, map.snapUnit]);
+    fc.on('object:modified', handleModified);
+    return () => {
+      fc.off('object:moving', handleMoving);
+      fc.off('object:modified', handleModified);
+    };
+  }, [snapToGridEnabled, map.gridSize, map.snapUnit]);
 
   // ── Rotate selected object ────────────────────────────────────────────────────
   const rotateSelected = useCallback((degrees) => {

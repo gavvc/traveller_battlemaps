@@ -1,7 +1,5 @@
-/**
- * Toolbar — bottom tool bar with tool selection, zoom, grid, snap controls.
- */
 import { useMapStore } from '../../store/mapStore';
+import { logAnalyticsEvent } from '../../utils/firebase';
 
 const TOOLS = [
   { id: 'select', icon: '⬛', label: 'Select', key: 'V' },
@@ -38,13 +36,6 @@ export default function Toolbar({ engine, onAddText }) {
     fc.requestRenderAll();
   }
 
-  function handleDelete() {
-    engine?.current?.deleteSelected();
-  }
-  function handleRotate(deg) {
-    engine?.current?.rotateSelected(deg);
-  }
-
   return (
     <div className="app-toolbar">
       {/* Tool selection */}
@@ -66,20 +57,6 @@ export default function Toolbar({ engine, onAddText }) {
 
       <div className="toolbar-divider" />
 
-      {/* Rotation */}
-      <div className="toolbar-group">
-        <span className="toolbar-label">Rotate</span>
-        <button className="btn btn-ghost" data-tip="Rotate −90°" onClick={() => handleRotate(-90)}>↺</button>
-        <button className="btn btn-ghost" data-tip="Rotate +90°" onClick={() => handleRotate(90)}>↻</button>
-      </div>
-
-      <div className="toolbar-divider" />
-
-      {/* Delete */}
-      <button className="btn btn-ghost" data-tip="Delete selected (Del)" onClick={handleDelete}>🗑</button>
-
-      <div className="toolbar-divider" />
-
       {/* Grid */}
       <div className="toolbar-group">
         <span className="toolbar-label">Grid</span>
@@ -90,9 +67,6 @@ export default function Toolbar({ engine, onAddText }) {
         >
           ⊞
         </button>
-        <span style={{ fontSize: 10, color: 'var(--color-text-muted)', marginLeft: 2 }}>
-          {map.gridType === 'hex' ? 'Hex' : 'Square'}
-        </span>
       </div>
 
       {/* Snap */}
@@ -124,22 +98,15 @@ export default function Toolbar({ engine, onAddText }) {
         <button className="btn btn-ghost btn-icon" data-tip="Zoom in (+)" onClick={zoomIn}>+</button>
       </div>
 
-      <div className="toolbar-divider" />
-
-      {/* Export */}
-      <div className="toolbar-group">
-        <button className="btn btn-ghost" data-tip="Export PNG (without grid)" onClick={() => engine?.current?.exportToPNG(false)}>
-          📷 Export
-        </button>
-        <button className="btn btn-ghost" data-tip="Export PNG (with grid)" onClick={() => engine?.current?.exportToPNG(true)}>
-          +Grid
-        </button>
-      </div>
-
-      {/* Status */}
-      <div className="status-info">
-        {map.name} {state.isDirty ? '●' : ''}
-      </div>
+      {/* About in the bottom right corner */}
+      <button
+        className="btn btn-ghost"
+        style={{ marginLeft: 'auto', fontSize: 11 }}
+        onClick={() => { actions.showAboutDialog(); logAnalyticsEvent('view_about'); }}
+        title="About, Licensing & Credits"
+      >
+        ❔ About
+      </button>
     </div>
   );
 }

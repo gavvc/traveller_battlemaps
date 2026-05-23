@@ -50,7 +50,7 @@ export default function AboutDialog() {
           </div>
 
           <div style={{ fontSize: 11, color: 'var(--color-text-muted)' }}>
-            <strong>GeomorphForge Development:</strong> Built with Fabric.js, React, and Firebase. All editor source code is committed to Git and hosted on GitHub under a permissive non-commercial model.
+            <strong>GeomorphForge Development:</strong> Built with Fabric.js, React, and Firebase.
           </div>
         </div>
 
